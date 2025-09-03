@@ -1,6 +1,45 @@
-# Getting Started with Create React App
+# AI Content Authenticity Detector
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A React web application that uses Google Gemini AI to detect fake content in text, images, and videos.
+
+## Features
+
+- **Text Analysis**: Analyze news articles, social media posts, and other text content for authenticity
+- **Image Detection**: Detect manipulated or deepfake images using AI vision analysis
+- **Video Analysis**: Analyze video metadata and provide guidance on potential deepfake content
+- **Real-time Processing**: Powered by Google Gemini AI for accurate content analysis
+- **Modern UI**: Beautiful, responsive interface built with React and Tailwind CSS
+
+## Setup Instructions
+
+### Prerequisites
+- Node.js (v14 or higher)
+- npm or yarn package manager
+- Google Gemini API key
+
+### Installation
+
+1. Clone the repository:
+```bash
+git clone <repository-url>
+cd fake-content-detector
+```
+
+2. Install dependencies:
+```bash
+npm install
+npm install @google/generative-ai
+```
+
+3. Create a `.env` file in the root directory and add your Gemini API key:
+```
+REACT_APP_GEMINI_API_KEY=your_api_key_here
+```
+
+4. Start the development server:
+```bash
+npm start
+```
 
 ## Available Scripts
 
