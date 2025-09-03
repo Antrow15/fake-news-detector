@@ -65,26 +65,26 @@ const FakeDetectorApp = () => {
   const TabButton = ({ id, icon: Icon, label, isActive, onClick }) => (
     <button
       onClick={onClick}
-      className={`flex items-center space-x-2 px-6 py-3 rounded-lg font-medium transition-all duration-200 ${
+      className={`flex items-center space-x-1 sm:space-x-2 px-3 sm:px-6 py-2 sm:py-3 rounded-lg font-medium transition-all duration-200 text-sm sm:text-base ${
         isActive 
           ? 'bg-blue-600 text-white shadow-lg' 
           : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
       }`}
     >
-      <Icon size={20} />
-      <span>{label}</span>
+      <Icon size={16} className="sm:w-5 sm:h-5" />
+      <span className="hidden xs:inline sm:inline">{label}</span>
     </button>
   );
 
   const ResultCard = ({ result }) => {
     if (result?.error) {
       return (
-        <div className="bg-red-50 border border-red-200 rounded-lg p-6">
-          <div className="flex items-center space-x-3">
-            <AlertTriangle className="text-red-500" size={24} />
+        <div className="bg-red-50 border border-red-200 rounded-lg p-4 sm:p-6">
+          <div className="flex items-center space-x-2 sm:space-x-3">
+            <AlertTriangle className="text-red-500 flex-shrink-0" size={20} />
             <div>
-              <h3 className="text-lg font-semibold text-red-800">Error</h3>
-              <p className="text-red-600">{result.error}</p>
+              <h3 className="text-base sm:text-lg font-semibold text-red-800">Error</h3>
+              <p className="text-sm sm:text-base text-red-600">{result.error}</p>
             </div>
           </div>
         </div>
@@ -95,24 +95,24 @@ const FakeDetectorApp = () => {
     const confidence = result?.confidence;
     
     return (
-      <div className={`border rounded-lg p-6 ${
+      <div className={`border rounded-lg p-4 sm:p-6 ${
         isFake 
           ? 'bg-red-50 border-red-200' 
           : 'bg-green-50 border-green-200'
       }`}>
-        <div className="flex items-center space-x-3 mb-4">
+        <div className="flex items-center space-x-2 sm:space-x-3 mb-3 sm:mb-4">
           {isFake ? (
-            <AlertTriangle className="text-red-500" size={32} />
+            <AlertTriangle className="text-red-500 flex-shrink-0" size={24} />
           ) : (
-            <CheckCircle className="text-green-500" size={32} />
+            <CheckCircle className="text-green-500 flex-shrink-0" size={24} />
           )}
-          <div>
-            <h3 className={`text-xl font-bold ${
+          <div className="min-w-0 flex-1">
+            <h3 className={`text-lg sm:text-xl font-bold ${
               isFake ? 'text-red-800' : 'text-green-800'
             }`}>
               {isFake ? 'Likely Fake' : 'Likely Authentic'}
             </h3>
-            <p className={`text-sm ${
+            <p className={`text-xs sm:text-sm ${
               isFake ? 'text-red-600' : 'text-green-600'
             }`}>
               Confidence: {(confidence * 100).toFixed(0)}%
@@ -129,7 +129,7 @@ const FakeDetectorApp = () => {
           ></div>
         </div>
         
-        <p className={`text-sm ${
+        <p className={`text-xs sm:text-sm leading-relaxed ${
           isFake ? 'text-red-700' : 'text-green-700'
         }`}>
           {result?.reasoning}
@@ -140,13 +140,13 @@ const FakeDetectorApp = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8">
         {/* Header */}
-        <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-gray-800 mb-4">
+        <div className="text-center mb-8 sm:mb-12">
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-800 mb-3 sm:mb-4 px-2">
             AI Content Authenticity Detector
           </h1>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+          <p className="text-sm sm:text-base lg:text-lg text-gray-600 max-w-2xl mx-auto px-4">
             Upload text, images, or videos to analyze their authenticity using advanced AI detection algorithms
           </p>
         </div>
@@ -154,7 +154,7 @@ const FakeDetectorApp = () => {
         {/* Main Content */}
         <div className="max-w-4xl mx-auto">
           {/* Tab Navigation */}
-          <div className="flex justify-center space-x-4 mb-8">
+          <div className="flex justify-center space-x-2 sm:space-x-4 mb-6 sm:mb-8 overflow-x-auto px-2">
             <TabButton
               id="text"
               icon={FileText}
@@ -179,25 +179,25 @@ const FakeDetectorApp = () => {
           </div>
 
           {/* Content Area */}
-          <div className="bg-white rounded-xl shadow-lg p-8">
+          <div className="bg-white rounded-xl shadow-lg p-4 sm:p-6 lg:p-8">
             {/* Text Analysis */}
             {activeTab === 'text' && (
               <div className="space-y-6">
                 <div>
-                  <label className="block text-lg font-medium text-gray-700 mb-3">
+                  <label className="block text-base sm:text-lg font-medium text-gray-700 mb-3">
                     Enter text to analyze:
                   </label>
                   <textarea
                     value={inputText}
                     onChange={(e) => setInputText(e.target.value)}
                     placeholder="Paste news article, social media post, or any text content here..."
-                    className="w-full h-32 p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                    className="w-full h-32 sm:h-40 p-3 sm:p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none text-sm sm:text-base"
                   />
                 </div>
                 <button
                   onClick={handleTextAnalysis}
                   disabled={isAnalyzing || !inputText.trim()}
-                  className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-medium hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors duration-200 flex items-center justify-center space-x-2"
+                  className="w-full bg-blue-600 text-white py-3 sm:py-4 px-4 sm:px-6 rounded-lg font-medium hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors duration-200 flex items-center justify-center space-x-2 text-sm sm:text-base"
                 >
                   {isAnalyzing ? (
                     <>
@@ -218,10 +218,10 @@ const FakeDetectorApp = () => {
             {activeTab === 'image' && (
               <div className="space-y-6">
                 <div className="text-center">
-                  <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 hover:border-blue-500 transition-colors duration-200">
-                    <Image size={48} className="mx-auto text-gray-400 mb-4" />
-                    <p className="text-lg font-medium text-gray-700 mb-2">Upload an image to analyze</p>
-                    <p className="text-sm text-gray-500 mb-4">Supports JPEG, PNG, GIF files up to 10MB</p>
+                  <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 sm:p-6 lg:p-8 hover:border-blue-500 transition-colors duration-200">
+                    <Image size={32} className="mx-auto text-gray-400 mb-3 sm:mb-4 sm:w-12 sm:h-12" />
+                    <p className="text-base sm:text-lg font-medium text-gray-700 mb-2">Upload an image to analyze</p>
+                    <p className="text-xs sm:text-sm text-gray-500 mb-3 sm:mb-4">Supports JPEG, PNG, GIF files up to 10MB</p>
                     <input
                       type="file"
                       accept="image/*"
@@ -232,9 +232,9 @@ const FakeDetectorApp = () => {
                     />
                     <label
                       htmlFor="image-upload"
-                      className="inline-flex items-center space-x-2 bg-blue-600 text-white py-2 px-4 rounded-lg cursor-pointer hover:bg-blue-700 transition-colors duration-200"
+                      className="inline-flex items-center space-x-2 bg-blue-600 text-white py-2 sm:py-3 px-3 sm:px-4 rounded-lg cursor-pointer hover:bg-blue-700 transition-colors duration-200 text-sm sm:text-base"
                     >
-                      <Upload size={20} />
+                      <Upload size={16} className="sm:w-5 sm:h-5" />
                       <span>Choose Image</span>
                     </label>
                   </div>
@@ -251,10 +251,10 @@ const FakeDetectorApp = () => {
             {activeTab === 'video' && (
               <div className="space-y-6">
                 <div className="text-center">
-                  <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 hover:border-blue-500 transition-colors duration-200">
-                    <Video size={48} className="mx-auto text-gray-400 mb-4" />
-                    <p className="text-lg font-medium text-gray-700 mb-2">Upload a video to analyze</p>
-                    <p className="text-sm text-gray-500 mb-4">Supports MP4, AVI, MOV files up to 100MB</p>
+                  <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 sm:p-6 lg:p-8 hover:border-blue-500 transition-colors duration-200">
+                    <Video size={32} className="mx-auto text-gray-400 mb-3 sm:mb-4 sm:w-12 sm:h-12" />
+                    <p className="text-base sm:text-lg font-medium text-gray-700 mb-2">Upload a video to analyze</p>
+                    <p className="text-xs sm:text-sm text-gray-500 mb-3 sm:mb-4">Supports MP4, AVI, MOV files up to 100MB</p>
                     <input
                       type="file"
                       accept="video/*"
@@ -265,9 +265,9 @@ const FakeDetectorApp = () => {
                     />
                     <label
                       htmlFor="video-upload"
-                      className="inline-flex items-center space-x-2 bg-blue-600 text-white py-2 px-4 rounded-lg cursor-pointer hover:bg-blue-700 transition-colors duration-200"
+                      className="inline-flex items-center space-x-2 bg-blue-600 text-white py-2 sm:py-3 px-3 sm:px-4 rounded-lg cursor-pointer hover:bg-blue-700 transition-colors duration-200 text-sm sm:text-base"
                     >
-                      <Upload size={20} />
+                      <Upload size={16} className="sm:w-5 sm:h-5" />
                       <span>Choose Video</span>
                     </label>
                   </div>
@@ -282,10 +282,10 @@ const FakeDetectorApp = () => {
 
             {/* Loading State */}
             {isAnalyzing && (
-              <div className="mt-8 text-center">
-                <div className="inline-flex items-center space-x-3 bg-blue-50 px-6 py-4 rounded-lg">
-                  <Loader2 className="animate-spin text-blue-600" size={24} />
-                  <span className="text-blue-700 font-medium">
+              <div className="mt-6 sm:mt-8 text-center">
+                <div className="inline-flex items-center space-x-2 sm:space-x-3 bg-blue-50 px-4 sm:px-6 py-3 sm:py-4 rounded-lg">
+                  <Loader2 className="animate-spin text-blue-600" size={20} />
+                  <span className="text-blue-700 font-medium text-sm sm:text-base">
                     Analyzing content with AI detection algorithms...
                   </span>
                 </div>
@@ -294,8 +294,8 @@ const FakeDetectorApp = () => {
 
             {/* Results */}
             {result && (
-              <div className="mt-8">
-                <h3 className="text-xl font-semibold text-gray-800 mb-4">Analysis Results:</h3>
+              <div className="mt-6 sm:mt-8">
+                <h3 className="text-lg sm:text-xl font-semibold text-gray-800 mb-4">Analysis Results:</h3>
                 <ResultCard result={result} />
                 <button
                   onClick={resetAnalysis}
@@ -309,12 +309,14 @@ const FakeDetectorApp = () => {
         </div>
 
         {/* Footer Info */}
-        <div className="mt-12 text-center text-sm text-gray-500">
+        <div className="mt-8 sm:mt-12 text-center text-xs sm:text-sm text-gray-500 px-4">
           <p>
             Powered by Google Gemini AI for advanced content authenticity detection
           </p>
-          <p className="mt-2">
-            • Text Analysis • Image Manipulation Detection • Video Metadata Analysis
+          <p className="mt-2 flex flex-col sm:flex-row sm:justify-center sm:space-x-2">
+            <span>• Text Analysis</span>
+            <span>• Image Manipulation Detection</span>
+            <span>• Video Metadata Analysis</span>
           </p>
         </div>
       </div>

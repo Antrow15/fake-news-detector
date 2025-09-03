@@ -23,22 +23,31 @@ export const apiService = {
       const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
       
       const prompt = `
-        Analyze the following text for authenticity and determine if it's likely to be fake news, misinformation, or authentic content.
+        Analyze the following text for factual accuracy and authenticity. Determine if it contains misinformation, false claims, or is factually correct.
         
-        Consider factors like:
-        - Factual accuracy and consistency
-        - Language patterns and bias
-        - Source credibility indicators
-        - Emotional manipulation tactics
-        - Logical fallacies
+        CRITICAL: Focus primarily on FACTUAL CORRECTNESS. Check if the claims made are true or false.
+        
+        Consider these factors in order of importance:
+        1. FACTUAL ACCURACY - Are the specific claims, facts, names, titles, dates, and information correct?
+        2. Verifiable information - Can the claims be verified against known facts?
+        3. Logical consistency - Do the statements make logical sense?
+        4. Language patterns that indicate misinformation
+        5. Emotional manipulation or bias
+        
+        Examples of what should be marked as FAKE:
+        - "India President is Modi" (Modi is Prime Minister, not President)
+        - "The Earth is flat" (factually incorrect)
+        - "Water boils at 50°C" (factually incorrect)
         
         Text to analyze: "${text}"
+        
+        IMPORTANT: If the text contains any factually incorrect information, mark it as fake (isFake: true) even if the explanation is partially correct.
         
         Respond in JSON format with:
         {
           "isFake": boolean,
           "confidence": number (0-1),
-          "reasoning": "detailed explanation of your analysis"
+          "reasoning": "detailed explanation focusing on factual accuracy first, then other factors"
         }
       `;
 
@@ -67,18 +76,19 @@ export const apiService = {
         console.log('JSON parsing failed, raw response:', analysisText);
         // Better fallback logic - analyze the actual content
         const lowerText = analysisText.toLowerCase();
-        const isFakeKeywords = ['fake', 'false', 'misinformation', 'manipulated', 'fabricated'];
-        const isAuthenticKeywords = ['authentic', 'real', 'genuine', 'legitimate', 'true'];
+        const isFakeKeywords = ['fake', 'false', 'misinformation', 'manipulated', 'fabricated', 'incorrect', 'wrong', 'inaccurate'];
+        const isAuthenticKeywords = ['authentic', 'real', 'genuine', 'legitimate', 'true', 'accurate', 'correct', 'factual'];
         
         const fakeScore = isFakeKeywords.reduce((score, keyword) => 
           score + (lowerText.includes(keyword) ? 1 : 0), 0);
         const authenticScore = isAuthenticKeywords.reduce((score, keyword) => 
           score + (lowerText.includes(keyword) ? 1 : 0), 0);
         
+        // Default to fake if uncertain, as it's better to be cautious with misinformation
         return {
-          isFake: fakeScore > authenticScore,
+          isFake: fakeScore >= authenticScore,
           confidence: 0.6,
-          reasoning: `Analysis completed. Raw response: ${analysisText}`
+          reasoning: `Analysis completed with fallback logic. The AI detected potential factual issues. Raw response: ${analysisText}`
         };
       }
     } catch (error) {
