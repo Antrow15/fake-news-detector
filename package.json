@@ -1,7 +1,11 @@
 {
   "name": "fake-content-detector",
-  "version": "0.1.0",
+  "version": "1.0.0",
+  "description": "AI-powered Chrome extension and React app for detecting fake content using Google Gemini",
   "private": true,
+  "keywords": ["ai", "fake-detection", "chrome-extension", "react", "gemini", "content-analysis"],
+  "author": "Your Name",
+  "license": "MIT",
   "dependencies": {
     "@google/generative-ai": "^0.15.0",
     "@testing-library/dom": "^10.4.1",
@@ -18,7 +22,10 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "extension:build": "echo 'Extension is ready to use from extension/ folder'",
+    "extension:test": "echo 'Load extension/ folder in Chrome extensions'",
+    "docs:serve": "echo 'Documentation available in docs/ folder'"
   },
   "eslintConfig": {
     "extends": [

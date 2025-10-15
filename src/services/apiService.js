@@ -20,36 +20,18 @@ export const apiService = {
   // Text analysis using Gemini API
   analyzeText: async (text) => {
     try {
-      const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
+      const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
       
-      const prompt = `
-        Analyze the following text for factual accuracy and authenticity. Determine if it contains misinformation, false claims, or is factually correct.
-        
-        CRITICAL: Focus primarily on FACTUAL CORRECTNESS. Check if the claims made are true or false.
-        
-        Consider these factors in order of importance:
-        1. FACTUAL ACCURACY - Are the specific claims, facts, names, titles, dates, and information correct?
-        2. Verifiable information - Can the claims be verified against known facts?
-        3. Logical consistency - Do the statements make logical sense?
-        4. Language patterns that indicate misinformation
-        5. Emotional manipulation or bias
-        
-        Examples of what should be marked as FAKE:
-        - "India President is Modi" (Modi is Prime Minister, not President)
-        - "The Earth is flat" (factually incorrect)
-        - "Water boils at 50°C" (factually incorrect)
-        
-        Text to analyze: "${text}"
-        
-        IMPORTANT: If the text contains any factually incorrect information, mark it as fake (isFake: true) even if the explanation is partially correct.
-        
-        Respond in JSON format with:
-        {
-          "isFake": boolean,
-          "confidence": number (0-1),
-          "reasoning": "detailed explanation focusing on factual accuracy first, then other factors"
-        }
-      `;
+      const prompt = `Analyze this text for factual accuracy. Focus on verifiable facts, not opinions.
+
+Text: "${text}"
+
+Respond ONLY in JSON:
+{
+  "isFake": boolean,
+  "confidence": number (0-1),
+  "reasoning": "brief explanation"
+}`;
 
       const result = await model.generateContent(prompt);
       const response = await result.response;
@@ -100,27 +82,18 @@ export const apiService = {
   // Image analysis using Gemini Vision API
   analyzeImage: async (imageFile) => {
     try {
-      const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
+      const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
       
       const base64Data = await fileToBase64(imageFile);
       
-      const prompt = `
-        Analyze the content shown in this image for authenticity. Focus on:
-        - Any text, headlines, or written content visible in the image
-        - Claims, statements, or information being presented
-        - Context and credibility of the content being shown
-        - Whether the information or claims appear to be factual or misleading
-        - Any signs of misinformation, fake news, or fabricated content
-        
-        Determine if the content/information shown in this image is likely authentic or fake.
-        
-        Respond in JSON format with:
-        {
-          "isFake": boolean,
-          "confidence": number (0-1),
-          "reasoning": "detailed explanation of your content analysis"
-        }
-      `;
+      const prompt = `Analyze this image for authenticity. Check for manipulated content, fake text, or misleading information.
+
+Respond ONLY in JSON:
+{
+  "isFake": boolean,
+  "confidence": number (0-1),
+  "reasoning": "brief explanation"
+}`;
 
       const imageParts = [
         {
@@ -181,7 +154,7 @@ export const apiService = {
     try {
       // Note: Gemini doesn't directly support video analysis yet
       // This is a workaround that analyzes video metadata and provides general guidance
-      const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
+      const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
       
       const videoInfo = {
         name: videoFile.name,

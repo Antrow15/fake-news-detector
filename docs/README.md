@@ -5,7 +5,7 @@ A comprehensive Chrome extension and React web application that uses Google Gemi
 ## 🚀 Features
 
 - **Chrome Extension**: Analyze content directly on any website
-- **React Web App**: Full-featured web interface  
+- **React Web App**: Full-featured web interface
 - **AI-Powered**: Uses Google Gemini 2.5 Flash for fast, accurate analysis
 - **Universal Support**: Works on all websites including WhatsApp, Wikipedia, social media
 - **Image Analysis**: Detect manipulated or fake images
@@ -32,10 +32,10 @@ fake-content-detector/
 ├── public/                 # Static web assets
 ├── docs/                  # Documentation
 ├── test-api-key.html      # API key testing tool
-└── README.md             # This file
+└── README.md             # Main project README
 ```
 
-## 🔧 Quick Setup
+## 🔧 Setup
 
 ### 1. Get Gemini API Key
 1. Visit [Google AI Studio](https://makersuite.google.com/app/apikey)
@@ -77,11 +77,11 @@ fake-content-detector/
 - **Storage**: Chrome Storage API
 - **Build Tools**: npm, Node.js
 
-## 📚 Documentation
+## 📋 API Key Requirements
 
-- **[Complete Guide](docs/README.md)** - Full project documentation
-- **[Chrome Extension](docs/CHROME_EXTENSION.md)** - Extension setup and usage
-- **[API Setup](docs/API_SETUP.md)** - API key configuration guide
+- Valid Google Gemini API key
+- Gemini API access enabled
+- Sufficient quota/limits
 
 ## 🔍 Testing
 

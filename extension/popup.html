@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Content Authenticity Detector</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      width: 380px;
+      min-height: 500px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: #333;
+    }
+
+    .container {
+      background: white;
+      margin: 8px;
+      border-radius: 12px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+    }
+
+    .header {
+      background: linear-gradient(135deg, #3B82F6 0%, #1D4ED8 100%);
+      color: white;
+      padding: 16px;
+      text-align: center;
+    }
+
+    .header h1 {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .header p {
+      font-size: 12px;
+      opacity: 0.9;
+    }
+
+    .content {
+      padding: 16px;
+    }
+
+    .tab-container {
+      display: flex;
+      margin-bottom: 16px;
+      background: #f8fafc;
+      border-radius: 8px;
+      padding: 4px;
+    }
+
+    .tab {
+      flex: 1;
+      padding: 8px 12px;
+      text-align: center;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 500;
+      transition: all 0.2s;
+      border: none;
+      background: transparent;
+    }
+
+    .tab.active {
+      background: white;
+      color: #3B82F6;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    .input-group {
+      margin-bottom: 12px;
+    }
+
+    .input-group label {
+      display: block;
+      font-size: 12px;
+      font-weight: 500;
+      color: #374151;
+      margin-bottom: 6px;
+    }
+
+    .input-group input,
+    .input-group textarea {
+      width: 100%;
+      padding: 10px;
+      border: 2px solid #e5e7eb;
+      border-radius: 8px;
+      font-size: 14px;
+      transition: border-color 0.2s;
+    }
+
+    .input-group input:focus,
+    .input-group textarea:focus {
+      outline: none;
+      border-color: #3B82F6;
+    }
+
+    .input-group textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    .file-upload {
+      border: 2px dashed #d1d5db;
+      border-radius: 8px;
+      padding: 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .file-upload:hover {
+      border-color: #3B82F6;
+      background: #f8fafc;
+    }
+
+    .file-upload input[type="file"] {
+      display: none;
+    }
+
+    .file-upload-icon {
+      font-size: 24px;
+      margin-bottom: 8px;
+    }
+
+    .file-upload-text {
+      font-size: 12px;
+      color: #6b7280;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .btn-primary {
+      background: #3B82F6;
+      color: white;
+    }
+
+    .btn-primary:hover:not(:disabled) {
+      background: #2563eb;
+    }
+
+    .btn-primary:disabled {
+      background: #9ca3af;
+      cursor: not-allowed;
+    }
+
+    .btn-secondary {
+      background: #f3f4f6;
+      color: #374151;
+    }
+
+    .btn-secondary:hover {
+      background: #e5e7eb;
+    }
+
+    .btn-success {
+      background: #28a745;
+      color: white;
+    }
+
+    .btn-success:hover {
+      background: #218838;
+    }
+
+    .loading {
+      display: none;
+      text-align: center;
+      padding: 20px;
+    }
+
+    .loading.active {
+      display: block;
+    }
+
+    .spinner {
+      width: 20px;
+      height: 20px;
+      border: 2px solid #e5e7eb;
+      border-top: 2px solid #3B82F6;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 8px;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .result {
+      margin-top: 16px;
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 12px;
+    }
+
+    .result.fake {
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      color: #dc2626;
+    }
+
+    .result.authentic {
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      color: #16a34a;
+    }
+
+    .result-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+
+    .confidence-bar {
+      width: 100%;
+      height: 6px;
+      background: #e5e7eb;
+      border-radius: 3px;
+      overflow: hidden;
+      margin: 8px 0;
+    }
+
+    .confidence-fill {
+      height: 100%;
+      transition: width 0.3s;
+    }
+
+    .confidence-fill.fake {
+      background: #dc2626;
+    }
+
+    .confidence-fill.authentic {
+      background: #16a34a;
+    }
+
+    .api-key-section {
+      background: #f8fafc;
+      padding: 12px;
+      border-radius: 8px;
+      margin-bottom: 16px;
+    }
+
+    .api-key-section h3 {
+      font-size: 14px;
+      margin-bottom: 8px;
+      color: #374151;
+    }
+
+    .status {
+      font-size: 11px;
+      padding: 4px 8px;
+      border-radius: 4px;
+      margin-top: 8px;
+      display: none;
+    }
+
+    .status.success {
+      background: #d1fae5;
+      color: #065f46;
+    }
+
+    .status.error {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .icon {
+      width: 16px;
+      height: 16px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>🔍 AI Content Detector</h1>
+      <p>Detect fake content with AI</p>
+    </div>
+
+    <div class="content">
+      <!-- API Key Section -->
+      <div class="api-key-section">
+        <h3>🔑 API Configuration</h3>
+        <div class="input-group">
+          <input id="apiKey" type="password" placeholder="Enter your Gemini API key" />
+        </div>
+        <button id="saveApiKey" class="btn btn-secondary">Save API Key</button>
+        <button id="testApiKey" class="btn btn-success" style="margin-left: 10px;">Test API Key</button>
+        <div id="apiStatus" class="status"></div>
+      </div>
+
+      <!-- Tab Navigation -->
+      <div class="tab-container">
+        <button class="tab active" data-tab="text">📝 Text</button>
+        <button class="tab" data-tab="image">🖼️ Image</button>
+        <button class="tab" data-tab="url">🌐 URL</button>
+      </div>
+
+      <!-- Text Analysis Tab -->
+      <div id="text-tab" class="tab-content active">
+        <div class="input-group">
+          <label>Enter text to analyze:</label>
+          <textarea id="textInput" placeholder="Paste news article, social media post, or any text content here..."></textarea>
+        </div>
+        <button id="analyzeText" class="btn btn-primary">
+          <span class="icon">🔍</span>
+          Analyze Text
+        </button>
+      </div>
+
+      <!-- Image Analysis Tab -->
+      <div id="image-tab" class="tab-content">
+        <div class="file-upload" id="imageUpload">
+          <div class="file-upload-icon">📷</div>
+          <div class="file-upload-text">Click to upload image</div>
+          <input type="file" id="imageInput" accept="image/*" />
+        </div>
+        <div id="imagePreview" style="display: none; margin-top: 12px;">
+          <img id="previewImg" style="max-width: 100%; border-radius: 8px;" />
+        </div>
+      </div>
+
+      <!-- URL Analysis Tab -->
+      <div id="url-tab" class="tab-content">
+        <div class="input-group">
+          <label>Enter URL to analyze:</label>
+          <input id="urlInput" type="url" placeholder="https://example.com/article" />
+        </div>
+        <button id="analyzeUrl" class="btn btn-primary">
+          <span class="icon">🌐</span>
+          Analyze URL
+        </button>
+      </div>
+
+      <!-- Loading State -->
+      <div id="loading" class="loading">
+        <div class="spinner"></div>
+        <div>Analyzing content with AI...</div>
+      </div>
+
+      <!-- Results -->
+      <div id="results"></div>
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
